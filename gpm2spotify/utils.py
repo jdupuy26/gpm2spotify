@@ -14,7 +14,6 @@ SPOTIFY_TOKEN = f"{CWD}/{settings.TOKEN_PATH}/spotify.cred"
 def _get_gpm_client():
     """ Fetch the Google Play Music Client"""
     gpm_client = Mobileclient()
-    # gpm_client.OAUTH_FILEPATH = GPM_TOKEN
     # Make sure that login works
     device_id = get_mac_address().replace(":", "").upper()
     assert gpm_client.oauth_login(device_id, oauth_credentials=GPM_TOKEN)
