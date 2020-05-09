@@ -50,8 +50,7 @@ def main(no_oauth, spotify_only):
             mobile_client.perform_oauth(storage_filepath=f"{GPM_TOKEN}")
 
         # Make sure that login works
-        device_id = get_mac_address().replace(":", "").upper()
-
+        device_id = settings.GOOGLE_DEVICE_ID or get_mac_address().replace(":", "").upper()
         try:
             assert mobile_client.oauth_login(device_id, oauth_credentials=GPM_TOKEN)
         except Exception:

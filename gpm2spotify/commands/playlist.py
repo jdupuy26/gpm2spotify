@@ -2,8 +2,8 @@ import sys
 
 import click
 
-from gpm2spotify.utils import gpm_client
-from gpm2spotify.utils import spotify_client
+from gpm2spotify.utils import get_gpm_client
+from gpm2spotify.utils import get_spotify_client
 
 
 @click.group(help="Commands for manipulating playlists")
@@ -29,6 +29,8 @@ def copy(playlist_name, dryrun, spotify_playlist_name):
         spotify_playlist_name = playlist_name
     # first make sure the playlist exists in GPM
     desired_playlist = None
+
+    gpm_client, spotify_client = get_gpm_client(), get_spotify_client()
 
     gpm_playlists = gpm_client.get_all_user_playlist_contents()
     for playlist in gpm_playlists:
@@ -59,6 +61,12 @@ def copy(playlist_name, dryrun, spotify_playlist_name):
 
     # gather the information for each track in the playlist
     tracks = [track for track in gpm_client.get_all_songs() if track.get("id") in desired_track_ids]
+    for track_id in desired_track_ids:
+        try:
+            tracks.append(gpm_client.get_track_info(track_id))
+        except Exception:
+            pass
+
     if dryrun:
         click.echo(
             click.style(
@@ -89,7 +97,8 @@ def copy(playlist_name, dryrun, spotify_playlist_name):
                     fg="green",
                 )
             )
-            spotify_track_ids.append(search_result["tracks"]["items"][0]["id"])
+            if search_result["tracks"]["items"][0]["id"] not in spotify_track_ids:
+                spotify_track_ids.append(search_result["tracks"]["items"][0]["id"])
 
     if not spotify_track_ids:
         click.echo(
