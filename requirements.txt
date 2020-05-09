@@ -1,0 +1,6 @@
+click
+dynaconf
+getmac
+gmusicapi
+pre-commit
+spotipy
