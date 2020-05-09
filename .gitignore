@@ -1,0 +1,7 @@
+*.egg-info
+*.pyc
+__pycache__
+config/settings.local.yaml
+.idea
+.tokens
+.venv
